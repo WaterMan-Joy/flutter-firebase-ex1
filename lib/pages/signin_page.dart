@@ -14,7 +14,12 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign In Page')),
+      appBar: AppBar(
+        title: Text('Sign In Page'),
+      ),
+      body: Center(
+        child: Text('Sign In Page'),
+      ),
     );
   }
 }
