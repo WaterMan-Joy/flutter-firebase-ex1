@@ -13,7 +13,8 @@ class Splashpage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authStatus = context.watch<AuthProvider>().state;
+    // 현재 계정이 로그인 되어 있냐 없냐 스테이트;
+    final authStatus = context.watch<AuthState>();
 
     if (authStatus.authStatus == AuthStatus.authenticated) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

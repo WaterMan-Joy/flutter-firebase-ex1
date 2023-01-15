@@ -1,30 +1,34 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
-import 'package:flutter_firebase_ex1/providers/auth/auth_state.dart';
-import 'package:flutter_firebase_ex1/repositories/auth_repository.dart';
+import 'package:state_notifier/state_notifier.dart';
 
-class AuthProvider extends ChangeNotifier {
-  AuthState _state = AuthState.unknown();
-  AuthState get state => _state;
+import '../../repositories/auth_repository.dart';
+import 'auth_state.dart';
 
-  final AuthRepository authRepository;
-  AuthProvider({
-    required this.authRepository,
-  });
+// LocatorMixin 으로 다른 상태를 가져온다
+class AuthProvider extends StateNotifier<AuthState> with LocatorMixin {
+  // AuthState 에 있는 unknown 값으로 초기화? 한다
+  AuthProvider() : super(AuthState.unknown());
 
-  void update(fbAuth.User? user) {
+  // user 상태가 변경되면 authStatus 상태를 변경한다
+  @override
+  void update(Locator watch) {
+    final user = watch<fbAuth.User?>();
+
     if (user != null) {
-      _state =
-          _state.copyWith(authStatus: AuthStatus.authenticated, user: user);
+      state = state.copyWith(
+        authStatus: AuthStatus.authenticated,
+        user: user,
+      );
     } else {
-      _state = _state.copyWith(authStatus: AuthStatus.unauthenticated);
+      state = state.copyWith(authStatus: AuthStatus.unauthenticated);
     }
-    print('auth state : $_state');
-    notifyListeners();
+    print('authState: $state');
+    super.update(watch);
   }
 
+  // sign out
   void signout() async {
-    await authRepository.singout();
+    // LocatorMixin 으로 다른 상태를 가져온다
+    await read<AuthRepository>().singout();
   }
 }
