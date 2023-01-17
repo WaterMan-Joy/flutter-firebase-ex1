@@ -44,7 +44,7 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    final signinStatus = context.watch<SigninProvider>().state;
+    final signinStatus = context.watch<SigninState>();
 
     return WillPopScope(
       onWillPop: () async => false,

@@ -6,3 +6,5 @@ export 'auth/auth_state.dart';
 export 'profile/profile_state.dart';
 export 'signin/signin_state.dart';
 export 'signup/signup_state.dart';
+export 'home/home_provider.dart';
+export 'home/home_state.dart';

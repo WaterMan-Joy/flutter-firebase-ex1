@@ -23,7 +23,9 @@ class AuthRepository {
       // 이 함수는 계정을 만들고 동시에 로그인 까지 가능하다
       final fbAuth.UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+      print("***** userCredential : $userCredential *****");
       final signedInUser = userCredential.user!;
+      print("***** signedInUser : $signedInUser *****");
       await userRef.doc(signedInUser.uid).set({
         'name': name,
         'email': email,

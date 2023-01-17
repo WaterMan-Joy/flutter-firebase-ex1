@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_ex1/pages/profile_page.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
         StateNotifierProvider<ProfileProvider, ProfileState>(
           create: (context) => ProfileProvider(),
         ),
+        StateNotifierProvider<HomeProvider, HomeState>(
+          create: (ctx) => HomeProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'Auth StateNotifierProvider',
@@ -66,6 +70,7 @@ class MyApp extends StatelessWidget {
           SignUpPage.routeName: (context) => SignUpPage(),
           SignInPage.routeName: (context) => SignInPage(),
           HomePage.routeName: (context) => HomePage(),
+          ProfilePage.routeName: (context) => ProfilePage(),
         },
       ),
     );
