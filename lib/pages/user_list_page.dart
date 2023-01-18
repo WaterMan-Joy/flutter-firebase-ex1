@@ -95,7 +95,9 @@ class _UserListPageState extends State<UserListPage> {
         itemBuilder: (ctx, index) {
           return Card(
             child: ListTile(
-              leading: Icon(Icons.person),
+              leading: FadeInImage.assetNetwork(
+                  placeholder: 'assets/images/loading.gif',
+                  image: userListState.users[index].profileImage),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
