@@ -91,12 +91,12 @@ class _ProfilePageState extends State<ProfilePage> {
           FadeInImage.assetNetwork(
             placeholder: 'assets/images/loading.gif',
             image: profileState.user.profileImage,
-            height: 200,
           ),
           SizedBox(height: 10.0),
           Padding(
             padding: const EdgeInsets.only(left: 10.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(

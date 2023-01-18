@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_firebase_ex1/models/custom_error.dart';
 import 'package:flutter_firebase_ex1/providers/home/home_state.dart';
 import 'package:flutter_firebase_ex1/providers/providers.dart';
@@ -10,6 +11,30 @@ import '../../models/user_model.dart';
 class HomeProvider extends StateNotifier<HomeState> with LocatorMixin {
   // ProfileState 를 초기화 시킨다
   HomeProvider() : super(HomeState.initial());
+
+  Future<Iterable<String>> getUsers() async {
+    CollectionReference<Map<String, dynamic>> collectionReference =
+        FirebaseFirestore.instance.collection('users');
+    print('1 : $collectionReference');
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await collectionReference.get();
+    print('2 : $querySnapshot');
+
+    List<User> userList = [];
+    for (var doc in querySnapshot.docs) {
+      User user = User.fromDoc(doc);
+      userList.add(user);
+    }
+    final finalUser = userList.map(
+      (e) {
+        return e.name;
+      },
+    );
+    // print(userList);
+    // return userList;
+    print(finalUser.toList());
+    return finalUser.toList();
+  }
 
   // void 타입으로 비동기로 uid 를 받아 ProfileRepository 의 void에 값을 넣는다
   Future<void> getProfile({required String uid}) async {

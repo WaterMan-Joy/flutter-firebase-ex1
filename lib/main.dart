@@ -3,6 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart' as fbAuth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_ex1/pages/profile_page.dart';
+import 'package:flutter_firebase_ex1/pages/user_list_page.dart';
+import 'package:flutter_firebase_ex1/providers/users/users_provider.dart';
+import 'package:flutter_firebase_ex1/providers/users/users_state.dart';
+import 'package:flutter_firebase_ex1/repositories/users_repositroy.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +31,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<UsersRepositroy>(
+          create: (ctx) =>
+              UsersRepositroy(firebaseFirestore: FirebaseFirestore.instance),
+        ),
         Provider<AuthRepository>(
           create: (context) => AuthRepository(
             firebaseFirestore: FirebaseFirestore.instance,
@@ -57,6 +65,9 @@ class MyApp extends StatelessWidget {
         StateNotifierProvider<HomeProvider, HomeState>(
           create: (ctx) => HomeProvider(),
         ),
+        StateNotifierProvider<UsersProvider, UsersState>(
+          create: (ctx) => UsersProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'Auth StateNotifierProvider',
@@ -71,6 +82,7 @@ class MyApp extends StatelessWidget {
           SignInPage.routeName: (context) => SignInPage(),
           HomePage.routeName: (context) => HomePage(),
           ProfilePage.routeName: (context) => ProfilePage(),
+          UserListPage.routeName: (ctx) => UserListPage(),
         },
       ),
     );

@@ -1,4 +1,5 @@
 // import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import '../../models/custom_error.dart';
