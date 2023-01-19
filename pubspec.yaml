@@ -44,6 +44,7 @@ dependencies:
   validators: ^3.0.0
   state_notifier: ^0.7.2+1
   flutter_state_notifier: ^0.7.1
+  image_picker: ^0.8.6
 
 dev_dependencies:
   flutter_test:

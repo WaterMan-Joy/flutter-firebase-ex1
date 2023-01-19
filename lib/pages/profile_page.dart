@@ -142,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: () {
               // Settings Page...
             },
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.edit),
           ),
         ],
         centerTitle: true,

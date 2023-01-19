@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_firebase_ex1/models/custom_error.dart';
 import 'package:flutter_firebase_ex1/providers/signup/signup_provider.dart';
 import 'package:flutter_firebase_ex1/providers/signup/signup_state.dart';
 import 'package:flutter_firebase_ex1/utils/error_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -20,8 +21,10 @@ class _SignUpPageState extends State<SignUpPage> {
   String? _name, _email, _password;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   final _formKey = GlobalKey<FormState>();
-
   final _passwprdController = TextEditingController();
+
+  //Camera
+  XFile? _pickedFile;
 
   void _submit() async {
     setState(() {
@@ -45,8 +48,52 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final signupState = context.watch<SignupProvider>().state;
+    final signupState = context.watch<SignupState>();
 
+    final _imageSize = MediaQuery.of(context).size.width / 4;
+
+    _showBottomSheet() {
+      return showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(25),
+          ),
+        ),
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () => _getCameraImage(),
+                child: const Text('사진찍기'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Divider(
+                thickness: 3,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () => _getPhotoLibraryImage(),
+                child: const Text('라이브러리에서 불러오기'),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    // TODO: MAIN VIEW
     return Scaffold(
       appBar: AppBar(title: Text('로그인 화면으로 돌아가기')),
       body: Center(
@@ -62,11 +109,53 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   height: 20,
                 ),
-                Image.asset(
-                  'assets/images/flutter_logo.png',
-                  width: 250,
-                  height: 250,
+                // TODO: CAMERA
+                if (_pickedFile == null)
+                  Container(
+                    constraints: BoxConstraints(
+                      minHeight: _imageSize,
+                      minWidth: _imageSize,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        _showBottomSheet();
+                      },
+                      child: Center(
+                        child: Icon(
+                          Icons.account_circle,
+                          size: _imageSize,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  Center(
+                    child: Container(
+                      width: _imageSize,
+                      height: _imageSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            width: 2,
+                            color: Theme.of(context).colorScheme.primary),
+                        image: DecorationImage(
+                            image: FileImage(
+                              File(_pickedFile!.path),
+                            ),
+                            fit: BoxFit.cover),
+                      ),
+                    ),
+                  ),
+                // TODO: Selected Photo
+                ElevatedButton(
+                  onPressed: () => _showBottomSheet(),
+                  child: Text('사진 선택'),
                 ),
+                // Image.asset(
+                //   'assets/images/flutter_logo.png',
+                //   width: 250,
+                //   height: 250,
+                // ),
                 SizedBox(
                   height: 10,
                 ),
@@ -170,6 +259,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   height: 10,
                 ),
+
                 ElevatedButton(
                   onPressed: signupState.signupStatus == SignupStatus.submitting
                       ? null
@@ -185,5 +275,40 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
+  }
+
+  _getCameraImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _pickedFile = pickedFile;
+        print('camera path : ${_pickedFile!.path}');
+        print('camera name : ${_pickedFile!.name}');
+      });
+    } else {
+      if (kDebugMode) {
+        print('이미지 선택안함');
+      }
+    }
+  }
+
+  // TODO: REOMOVE
+  _getRemovePhoto() {}
+
+  _getPhotoLibraryImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _pickedFile = pickedFile;
+        print('phote path : ${_pickedFile!.path}');
+        print('phote name : ${_pickedFile!.name}');
+      });
+    } else {
+      if (kDebugMode) {
+        print('이미지 선택안함');
+      }
+    }
   }
 }
